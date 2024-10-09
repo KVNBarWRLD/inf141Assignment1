@@ -42,9 +42,6 @@ class TokenTable:
 
 class Tokenizer:
 
-    # def __init__(self):
-    #     self.Store = TokenTable()
-
     def yield_line_from_file(self, text_file_path: str):
         try:
             with open(text_file_path) as infile:
@@ -64,6 +61,11 @@ class Tokenizer:
                     yield word
                     word = ""
 
+    def yield_tokens(self, text_file_path: str):
+        for line in self.yield_line_from_file(text_file_path):
+            for token in self.get_token(line):
+                yield token
+
     def tokenize(self, text_file_path: str):
         tokens = []
         for line in self.yield_line_from_file(text_file_path):
@@ -75,9 +77,5 @@ class Tokenizer:
         return collections.Counter(tokens)
 
     def print_frequencies(self, mappedFrequencies: dict[str: int]):
-        for (k,v) in {k: v for k, v in sorted(mappedFrequencies.items(), key=lambda item: item[1], reverse=True)}.items():
+        for (k,v) in {k: v for k, v in sorted(mappedFrequencies.items(), key=lambda item: item[1], reverse=True)}.items():  # code from https://www.geeksforgeeks.org/python-sort-python-dictionaries-by-key-or-value/
             print(f"{k}\t{v}")
-
-t = Tokenizer()
-
-print(t.print_frequencies(t.compute_word_frequencies(t.tokenize("tests/test4.txt"))))
